@@ -1,0 +1,19 @@
+<configuration>
+
+    <!-- This appender logs to the console -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <!-- This pattern defines the log format -->
+            <pattern>%d{YYYY-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!--
+      This sets the 'root' logger level.
+      Change "INFO" to "DEBUG" to see more detailed logs from libraries like Ktor.
+    -->
+    <root level="INFO">
+        <appender-ref ref="STDOUT" />
+    </root>
+
+</configuration>
