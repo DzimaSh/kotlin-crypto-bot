@@ -73,12 +73,35 @@ Follow these instructions to get the project up and running on your local machin
 
 ## ⚙️ Configuration
 
-Initial configuration is done directly in the code.
+Configuration is managed through the `application.conf` file located in `src/main/resources/`.
 
-* **Trading Symbol:** The cryptocurrency pair to trade can be changed in `main/Main.kt`.
-    ```kotlin
-    // in main/Main.kt
-    val symbol = "SHIBUSDT" // Change to any other symbol, e.g., "BTCUSDT"
+* **Strategies:** Multiple trading strategies can be configured in the `bot.strategies` section:
+    ```hocon
+    strategies = [
+      {
+        enabled = true
+        symbol = "SHIBUSDT"
+        type = "range"
+        parameters = {
+          lower-bound = "0.00002400"
+          upper-bound = "0.00002550"
+        }
+      }
+    ]
+    ```
+    Each strategy can be enabled/disabled and configured with specific parameters.
+
+* **Data Handlers:** Data sources are configured in the `bot.data-handlers` section:
+    ```hocon
+    data-handlers = [
+      {
+        enabled = true
+        type = "binance"
+        parameters = {
+          base-url = "wss://stream.binance.com:9443/ws"
+        }
+      }
+    ]
     ```
 
 * **Logging Level:** The verbosity of the logs can be controlled in `src/main/resources/logback.xml`. Change the root level from `INFO` to `DEBUG` to see more detailed output.
@@ -96,9 +119,9 @@ Initial configuration is done directly in the code.
 
 This project is a work in progress. Here are the planned future enhancements:
 
-* [ ] **Phase 1: Strategy & Execution**
-    * [ ] Implement the `StrategyEngine` to consume `PriceTick`s.
-    * [ ] Create a simple `RangeStrategy` class that can be configured via `DataStore`.
+* [x] **Phase 1: Strategy & Execution** *(Partially Completed - July 25, 2025)*
+    * [x] Implement the `StrategyEngine` to consume `PriceTick`s.
+    * [x] Create a simple `RangeStrategy` class that can be configured via configuration file.
     * [ ] Implement the `ExecutionHandler` to place mock orders and manage their lifecycle.
 
 * [ ] **Phase 2: Backtesting & Validation**
