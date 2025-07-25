@@ -3,7 +3,7 @@ package by.dzimash.di
 import by.dzimash.config.ConfigService
 import by.dzimash.engine.StrategyEngine
 import by.dzimash.handler.DataHandler
-import by.dzimash.handler.impl.BinanceDataHandler
+import by.dzimash.handler.DataHandlerFactory
 import by.dzimash.strategy.StrategyFactory
 import by.dzimash.strategy.TradingStrategy
 import io.ktor.client.*
@@ -35,12 +35,23 @@ val appModule = module {
         }
     }
 
-
     // --- CONFIGURATION ---
     single { ConfigService() }
 
     // --- FACTORIES & HANDLERS ---
-    single<DataHandler> { BinanceDataHandler(get(), get()) }
+    single { DataHandlerFactory(get(), get()) }
+    
+    single<DataHandler> { 
+        val configService = get<ConfigService>()
+        val dataHandlerFactory = get<DataHandlerFactory>()
+        
+        val dataHandlerConfigs = configService.loadDataHandlers()
+        val enabledConfig = dataHandlerConfigs.firstOrNull { it.enabled }
+            ?: throw IllegalStateException("No enabled data handlers found in configuration")
+        
+        dataHandlerFactory.create(enabledConfig)
+    }
+    
     single { StrategyFactory() }
 
     // --- ENGINE ---

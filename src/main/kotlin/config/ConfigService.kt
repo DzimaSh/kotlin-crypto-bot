@@ -1,6 +1,7 @@
 package by.dzimash.config
 
 import com.typesafe.config.ConfigFactory
+import com.typesafe.config.ConfigObject
 import by.dzimash.utils.logger
 
 /**
@@ -26,6 +27,26 @@ class ConfigService {
             )
         }.also {
             logger.info("Found ${it.size} strategies, ${it.count { s -> s.enabled }} are enabled.")
+        }
+    }
+
+    fun loadDataHandlers(): List<DataHandlerConfig> {
+        logger.info("Loading data handlers from configuration...")
+        val dataHandlerConfigs = config.getConfigList("bot.data-handlers")
+        return dataHandlerConfigs.map { dataHandlerConfig ->
+            val paramsMap = if (dataHandlerConfig.hasPath("parameters")) {
+                dataHandlerConfig.getObject("parameters").unwrapped().mapValues { it.value.toString() }
+            } else {
+                emptyMap()
+            }
+
+            DataHandlerConfig(
+                enabled = dataHandlerConfig.getBoolean("enabled"),
+                type = dataHandlerConfig.getString("type"),
+                parameters = paramsMap
+            )
+        }.also {
+            logger.info("Found ${it.size} data handlers, ${it.count { h -> h.enabled }} are enabled.")
         }
     }
 }

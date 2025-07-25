@@ -17,7 +17,8 @@ import java.math.BigDecimal
 
 class BinanceDataHandler(
     private val client: HttpClient,
-    private val json: Json
+    private val json: Json,
+    private val baseUrl: String = "wss://stream.binance.com:9443/ws"
 ) : DataHandler {
 
     private val logger by logger()
@@ -26,7 +27,7 @@ class BinanceDataHandler(
         val lowerCaseSymbol = symbol.lowercase()
 
         try {
-            client.webSocket("wss://stream.binance.com:9443/ws/${lowerCaseSymbol}@ticker") {
+            client.webSocket("${baseUrl}/${lowerCaseSymbol}@ticker") {
                 logger.info("Connected to Binance WebSocket for symbol: $symbol")
 
                 incoming.consumeAsFlow()
