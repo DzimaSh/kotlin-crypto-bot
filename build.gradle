@@ -13,6 +13,7 @@ repositories {
 ext {
     ktorVersion = '3.2.1'
     koinVersion = '3.5.6'
+    configVersion = '1.4.3'
 }
 
 dependencies {
@@ -33,6 +34,9 @@ dependencies {
     // Koin for Dependency Injection
     implementation "io.insert-koin:koin-core:${koinVersion}"
     implementation "io.insert-koin:koin-logger-slf4j:${koinVersion}"
+
+    // HOCON for configuration files
+    implementation "com.typesafe:config:${configVersion}"
 
     // Testing
     testImplementation 'org.jetbrains.kotlin:kotlin-test'
