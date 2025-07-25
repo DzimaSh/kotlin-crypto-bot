@@ -17,10 +17,8 @@ object Main : KoinComponent {
         logger.info("Starting Crypto Bot...")
 
         try {
-            // The rest of the code doesn't know or care that it's talking to Binance
             dataHandler.listenToPriceTicks("SHIBUSDT")
                 .collect { priceTick ->
-                    // We now receive our clean, generic PriceTick object
                     logger.info("Received Tick: $priceTick")
                 }
         } catch (e: Exception) {
